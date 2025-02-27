@@ -94,7 +94,7 @@ public abstract class Move {
         //moving the moved Piece
         builder.setPiece(this.movedPiece.movePiece(this));
         builder.setMoveMaker(this.board.currentPlayer().getOpponent().getAlliance());
-        
+
         return builder.build();
     }
 
@@ -155,7 +155,29 @@ public abstract class Move {
 
         @Override
         public Board execute() {
-            return null;
+            final Builder builder = new Builder();
+
+            // Add all the current player's pieces except the moved piece
+            for (final Piece piece : this.board.currentPlayer().getActivePieces()) {
+                if (!this.movedPiece.equals(piece)) {
+                    builder.setPiece(piece);
+                }
+            }
+
+            // Add all the opponent's pieces except the attacked piece
+            for (final Piece piece : this.board.currentPlayer().getOpponent().getActivePieces()) {
+                if (!this.attackedPiece.equals(piece)) {
+                    builder.setPiece(piece);
+                }
+            }
+
+            // Move the piece
+            builder.setPiece(this.movedPiece.movePiece(this));
+
+            // Switch turn to opponent
+            builder.setMoveMaker(this.board.currentPlayer().getOpponent().getAlliance());
+
+            return builder.build();
         }
     }
 
